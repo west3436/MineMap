@@ -1,0 +1,272 @@
+{
+  "1": {
+    "code": "Af",
+    "name": "Tropical, rainforest",
+    "rgb": [
+      0,
+      0,
+      255
+    ]
+  },
+  "2": {
+    "code": "Am",
+    "name": "Tropical, monsoon",
+    "rgb": [
+      0,
+      120,
+      255
+    ]
+  },
+  "3": {
+    "code": "Aw",
+    "name": "Tropical, savannah",
+    "rgb": [
+      70,
+      170,
+      250
+    ]
+  },
+  "4": {
+    "code": "BWh",
+    "name": "Arid, desert, hot",
+    "rgb": [
+      255,
+      0,
+      0
+    ]
+  },
+  "5": {
+    "code": "BWk",
+    "name": "Arid, desert, cold",
+    "rgb": [
+      255,
+      150,
+      150
+    ]
+  },
+  "6": {
+    "code": "BSh",
+    "name": "Arid, steppe, hot",
+    "rgb": [
+      245,
+      165,
+      0
+    ]
+  },
+  "7": {
+    "code": "BSk",
+    "name": "Arid, steppe, cold",
+    "rgb": [
+      255,
+      220,
+      100
+    ]
+  },
+  "8": {
+    "code": "Csa",
+    "name": "Temperate, dry summer, hot summer",
+    "rgb": [
+      255,
+      255,
+      0
+    ]
+  },
+  "9": {
+    "code": "Csb",
+    "name": "Temperate, dry summer, warm summer",
+    "rgb": [
+      200,
+      200,
+      0
+    ]
+  },
+  "10": {
+    "code": "Csc",
+    "name": "Temperate, dry summer, cold summer",
+    "rgb": [
+      150,
+      150,
+      0
+    ]
+  },
+  "11": {
+    "code": "Cwa",
+    "name": "Temperate, dry winter, hot summer",
+    "rgb": [
+      150,
+      255,
+      150
+    ]
+  },
+  "12": {
+    "code": "Cwb",
+    "name": "Temperate, dry winter, warm summer",
+    "rgb": [
+      100,
+      200,
+      100
+    ]
+  },
+  "13": {
+    "code": "Cwc",
+    "name": "Temperate, dry winter, cold summer",
+    "rgb": [
+      50,
+      150,
+      50
+    ]
+  },
+  "14": {
+    "code": "Cfa",
+    "name": "Temperate, no dry season, hot summer",
+    "rgb": [
+      200,
+      255,
+      80
+    ]
+  },
+  "15": {
+    "code": "Cfb",
+    "name": "Temperate, no dry season, warm summer",
+    "rgb": [
+      100,
+      255,
+      80
+    ]
+  },
+  "16": {
+    "code": "Cfc",
+    "name": "Temperate, no dry season, cold summer",
+    "rgb": [
+      50,
+      200,
+      0
+    ]
+  },
+  "17": {
+    "code": "Dsa",
+    "name": "Cold, dry summer, hot summer",
+    "rgb": [
+      255,
+      0,
+      255
+    ]
+  },
+  "18": {
+    "code": "Dsb",
+    "name": "Cold, dry summer, warm summer",
+    "rgb": [
+      200,
+      0,
+      200
+    ]
+  },
+  "19": {
+    "code": "Dsc",
+    "name": "Cold, dry summer, cold summer",
+    "rgb": [
+      150,
+      50,
+      150
+    ]
+  },
+  "20": {
+    "code": "Dsd",
+    "name": "Cold, dry summer, very cold winter",
+    "rgb": [
+      150,
+      100,
+      150
+    ]
+  },
+  "21": {
+    "code": "Dwa",
+    "name": "Cold, dry winter, hot summer",
+    "rgb": [
+      170,
+      175,
+      255
+    ]
+  },
+  "22": {
+    "code": "Dwb",
+    "name": "Cold, dry winter, warm summer",
+    "rgb": [
+      90,
+      120,
+      220
+    ]
+  },
+  "23": {
+    "code": "Dwc",
+    "name": "Cold, dry winter, cold summer",
+    "rgb": [
+      75,
+      80,
+      180
+    ]
+  },
+  "24": {
+    "code": "Dwd",
+    "name": "Cold, dry winter, very cold winter",
+    "rgb": [
+      50,
+      0,
+      135
+    ]
+  },
+  "25": {
+    "code": "Dfa",
+    "name": "Cold, no dry season, hot summer",
+    "rgb": [
+      0,
+      255,
+      255
+    ]
+  },
+  "26": {
+    "code": "Dfb",
+    "name": "Cold, no dry season, warm summer",
+    "rgb": [
+      55,
+      200,
+      255
+    ]
+  },
+  "27": {
+    "code": "Dfc",
+    "name": "Cold, no dry season, cold summer",
+    "rgb": [
+      0,
+      125,
+      125
+    ]
+  },
+  "28": {
+    "code": "Dfd",
+    "name": "Cold, no dry season, very cold winter",
+    "rgb": [
+      0,
+      70,
+      95
+    ]
+  },
+  "29": {
+    "code": "ET",
+    "name": "Polar, tundra",
+    "rgb": [
+      178,
+      178,
+      178
+    ]
+  },
+  "30": {
+    "code": "EF",
+    "name": "Polar, frost",
+    "rgb": [
+      102,
+      102,
+      102
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MineMap</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header id="topbar">
+  <div class="brand" title="MineMap">
+    <span class="logo" id="logo"></span>
+    <span class="name">MineMap</span>
+  </div>
+  <input id="projectName" class="pname" type="text" title="Project name" placeholder="Project name">
+  <div class="actions" id="topActions"></div>
+  <div class="spacer"></div>
+  <div id="jobBadge" class="badge" hidden></div>
+</header>
+
+<main id="layout">
+  <section id="mapPane">
+    <div id="mapTools" class="toolbar"></div>
+    <div id="map"></div>
+    <div id="bboxBar" class="bboxbar">
+      <label title="North edge (latitude)">N <input id="bbN" type="number" step="0.0001"></label>
+      <label title="South edge (latitude)">S <input id="bbS" type="number" step="0.0001"></label>
+      <label title="West edge (longitude)">W <input id="bbW" type="number" step="0.0001"></label>
+      <label title="East edge (longitude)">E <input id="bbE" type="number" step="0.0001"></label>
+      <div id="estimate" class="estimate" title="Map size estimate"></div>
+    </div>
+  </section>
+
+  <section id="sidePane">
+    <nav id="tabs" class="tabs"></nav>
+    <div id="panel" class="panel"></div>
+  </section>
+</main>
+
+<div id="popover" class="popover" hidden></div>
+<div id="toast" class="toast" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="module" src="/static/app.js"></script>
+</body>
+</html>

@@ -116,13 +116,16 @@ def deg2tile(lon: float, lat: float, z: int) -> tuple[float, float]:
 
 
 def pick_zoom(bbox: BBox, meters_per_block: float, max_zoom: int = 15) -> int:
-    """Smallest Terrarium zoom whose ground resolution at the bbox centre is finer
-    than the requested block size (so the resample never upsamples)."""
+    """Terrarium zoom whose ground resolution at the bbox centre is closest (in log
+    space) to the requested block size. Slight upsampling is fine for terrain and
+    keeps the tile count a quarter of the next finer level."""
     res0 = 156543.03 * math.cos(math.radians(bbox.mid_lat))  # m/px at z0
-    z = 0
-    while z < max_zoom and res0 / (2 ** z) > meters_per_block:
-        z += 1
-    return z
+    best, best_err = 0, float("inf")
+    for z in range(0, max_zoom + 1):
+        err = abs(math.log(res0 / (2 ** z)) - math.log(meters_per_block))
+        if err < best_err:
+            best, best_err = z, err
+    return best
 
 
 def tile_count(bbox: BBox, zoom: int) -> int:
