@@ -596,11 +596,20 @@ def create_app(state: AppState | None = None) -> FastAPI:
 
     # ---- outputs -------------------------------------------------------------
     @app.get("/api/preview/meta")
-    def preview_meta():
-        f = state.project.preview_dir / "meta.json"
+    def preview_meta(name: str = "biomes"):
+        if "/" in name or "\\" in name or ".." in name:
+            raise HTTPException(400, "bad name")
+        f = state.project.preview_dir / f"{name}.json"
+        if not f.exists():
+            f = state.project.preview_dir / "meta.json"
         if not f.exists():
             raise HTTPException(404, "no preview yet")
-        return JSONResponse(json.loads(f.read_text(encoding="utf-8")))
+        meta = json.loads(f.read_text(encoding="utf-8"))
+        b = state.project.bbox
+        bb = meta.get("bbox", {})
+        meta["current"] = all(abs(float(bb.get(k, 1e9)) - float(getattr(b, k))) < 1e-6
+                              for k in ("north", "south", "west", "east"))
+        return JSONResponse(meta, headers={"Cache-Control": "no-store"})
 
     @app.get("/api/preview/{name}.png")
     def preview(name: str):
@@ -609,11 +618,7 @@ def create_app(state: AppState | None = None) -> FastAPI:
         f = state.project.preview_dir / f"{name}.png"
         if not f.exists():
             raise HTTPException(404, "no preview yet")
-        b = state.project.bbox
-        return FileResponse(f, media_type="image/png", headers={
-            "X-BBox-North": str(b.north), "X-BBox-South": str(b.south),
-            "X-BBox-West": str(b.west), "X-BBox-East": str(b.east),
-            "Cache-Control": "no-cache"})
+        return FileResponse(f, media_type="image/png", headers={"Cache-Control": "no-store"})
 
     @app.get("/api/commands")
     def commands():

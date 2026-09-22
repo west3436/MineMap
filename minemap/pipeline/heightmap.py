@@ -49,6 +49,8 @@ def run(project: Project, reporter: Reporter) -> None:
     if project.heightmap_orig_png.exists():
         project.heightmap_orig_png.unlink()   # stale river baseline, rivers step re-snapshots
         reporter.log("removed stale river baseline")
+    from .preview import heightmap_preview, write_preview
+    write_preview(project, "heightmap", heightmap_preview(v))
     cy, cx = Y.shape[0] // 2, Y.shape[1] // 2
     reporter.log(f"wrote {project.heightmap_png} ({v.shape[1]}x{v.shape[0]}, 16-bit)")
     reporter.log(f"centre Y={Y[cy, cx]:.0f}  max Y={Y.max():.0f}  min Y={Y.min():.0f}  "

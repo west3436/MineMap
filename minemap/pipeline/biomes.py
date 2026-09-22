@@ -225,25 +225,20 @@ def preview_colours(n: int) -> np.ndarray:
 
 def write_previews(project: Project, biomes: np.ndarray, heightmap_u16: np.ndarray,
                    palette: list[str | None], remap: dict[str, str], max_side: int = 2048) -> None:
+    from .preview import downsample_step, heightmap_preview, write_preview
     H, W = biomes.shape
-    step = max(1, int(np.ceil(max(H, W) / max_side)))
+    step = downsample_step(H, W, max_side)
     b_ds = biomes[::step, ::step]
     cols = preview_colours(len(palette))
     rgb = cols[np.clip(b_ds, 0, len(palette) - 1)]
-    pv = project.preview_dir
-    Image.fromarray(rgb).save(pv / "biomes.png")
-    h_ds = heightmap_u16[::step, ::step].astype(np.float32)
-    lo, hi = float(h_ds.min()), float(max(h_ds.max(), h_ds.min() + 1))
-    grey = np.clip((h_ds - lo) / (hi - lo) * 255.0, 0, 255).astype(np.uint8)
-    Image.fromarray(grey).save(pv / "heightmap.png")
-    bb = project.bbox
     legend = {str(i): {"paint": palette[i], "final": remap.get(palette[i], palette[i]),
                        "rgb": cols[i].tolist()} for i in range(1, len(palette))}
-    (pv / "meta.json").write_text(json.dumps({
-        "bbox": {"north": bb.north, "south": bb.south, "west": bb.west, "east": bb.east},
-        "step": step, "width": int(b_ds.shape[1]), "height": int(b_ds.shape[0]),
-        "full_width": W, "full_height": H, "legend": legend,
-    }, indent=2), encoding="utf-8")
+    extra = {"step": step, "full_width": W, "full_height": H, "legend": legend}
+    write_preview(project, "biomes", rgb, extra)
+    write_preview(project, "heightmap", heightmap_preview(heightmap_u16))
+    # meta.json kept for older clients: same content as the biomes preview
+    (project.preview_dir / "meta.json").write_text(
+        (project.preview_dir / "biomes.json").read_text(encoding="utf-8"), encoding="utf-8")
 
 
 # ---------------------------------------------------------------- run

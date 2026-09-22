@@ -223,6 +223,7 @@ function setBBox(bb) {
   const r = (v) => Math.round(v * 10000) / 10000;
   S.project.bbox = { north: r(bb.north), south: r(bb.south), west: r(bb.west), east: r(bb.east) };
   syncRectFromProject();
+  invalidateOverlays();
   scheduleSave(150);
 }
 
@@ -256,6 +257,7 @@ function onHandleDrag(i) {
   const bb = { north: Math.max(p.lat, opp.lat), south: Math.min(p.lat, opp.lat), west: Math.min(p.lng, opp.lng), east: Math.max(p.lng, opp.lng) };
   const r = (v) => Math.round(v * 10000) / 10000;
   S.project.bbox = { north: r(bb.north), south: r(bb.south), west: r(bb.west), east: r(bb.east) };
+  invalidateOverlays();
   const b = S.project.bbox;
   rect.setBounds([[b.south, b.west], [b.north, b.east]]);
   const corners = [[b.north, b.west], [b.north, b.east], [b.south, b.east], [b.south, b.west]];
@@ -299,19 +301,53 @@ function clearSpawn() {
 }
 
 async function toggleOverlay(name) {
-  const btn = name === 'heightmap' ? $('#btnOvHeight') : $('#btnOvBiome');
   if (S.overlays[name]) {
-    S.overlays[name].remove();
-    S.overlays[name] = null;
-    btn.classList.remove('active');
+    removeOverlay(name);
     return;
   }
+  await showOverlay(name);
+}
+
+function overlayButton(name) {
+  return name === 'heightmap' ? $('#btnOvHeight') : $('#btnOvBiome');
+}
+
+function removeOverlay(name) {
+  if (S.overlays[name]) S.overlays[name].remove();
+  S.overlays[name] = null;
+  const btn = overlayButton(name);
+  if (btn) btn.classList.remove('active');
+}
+
+// Place the preview where it was built. Each preview carries its own bounds, so an
+// old preview never gets stretched over a box it does not describe.
+async function showOverlay(name, quiet = false) {
   let meta;
-  try { meta = await api('/api/preview/meta'); } catch (e) { toast('No preview yet. Run the biomes step first.', true); return; }
+  try { meta = await api(`/api/preview/meta?name=${name}&t=${Date.now()}`); }
+  catch (e) { if (!quiet) toast('No preview yet. Run the heightmap or biomes step first.', true); return; }
   const bb = meta.bbox || meta;
   const bounds = [[bb.south, bb.west], [bb.north, bb.east]];
+  if (S.overlays[name]) S.overlays[name].remove();
   S.overlays[name] = L.imageOverlay(`/api/preview/${name}.png?t=${Date.now()}`, bounds, { opacity: 0.75 }).addTo(map);
-  btn.classList.add('active');
+  const btn = overlayButton(name);
+  if (btn) btn.classList.add('active');
+  if (meta.current === false && !quiet) toast('This preview is from an earlier box. Rerun the build to refresh it.');
+}
+
+// The box moved: previews on screen describe the old box, so take them down.
+function invalidateOverlays() {
+  let had = false;
+  for (const name of Object.keys(S.overlays)) {
+    if (S.overlays[name]) { removeOverlay(name); had = true; }
+  }
+  if (had) toast('Box changed. Previews hidden until the next build.');
+}
+
+// After a build, put back whichever overlays were showing, with fresh images.
+async function refreshOverlays() {
+  for (const name of Object.keys(S.overlays)) {
+    if (S.overlays[name]) await showOverlay(name, true);
+  }
 }
 
 function bindBBoxInputs() {
@@ -839,6 +875,7 @@ async function refreshAfterJob() {
   } catch (e) { /* keep local */ }
   try { S.scan = await api('/api/scan'); S.catalog = null; S.structCatalog = null; } catch (e) { /* none */ }
   if (S.tab === 'build' || S.tab === 'instance') renderPanel();
+  await refreshOverlays();
 }
 
 // --------------------------------------------------------------------------- top bar
