@@ -223,19 +223,13 @@ def estimate_for(project: Project) -> dict:
 
 
 def _pick_via_subprocess(kind: str, initial: str) -> str:
-    code = (
-        "import sys, tkinter as tk\n"
-        "from tkinter import filedialog\n"
-        "r = tk.Tk(); r.withdraw(); r.attributes('-topmost', True)\n"
-        "kind, init = sys.argv[1], sys.argv[2]\n"
-        "if kind == 'dir':\n"
-        "    p = filedialog.askdirectory(initialdir=init or None)\n"
-        "else:\n"
-        "    p = filedialog.askopenfilename(initialdir=init or None)\n"
-        "print(p or '')\n"
-    )
-    out = subprocess.run([sys.executable, "-c", code, kind, initial],
-                         capture_output=True, text=True, timeout=600)
+    """Run the picker in a child process. Frozen builds re-launch the exe with the
+    hidden --pick flag; source runs use the interpreter with the same flag."""
+    if getattr(sys, "frozen", False):
+        cmd = [sys.executable, "--pick", kind, "--initial", initial]
+    else:
+        cmd = [sys.executable, "-m", "minemap", "--pick", kind, "--initial", initial]
+    out = subprocess.run(cmd, capture_output=True, text=True, timeout=600, check=True)
     return out.stdout.strip()
 
 
@@ -258,8 +252,6 @@ def _pick_in_thread(kind: str, initial: str) -> str:
 def pick_path(kind: str, initial: str = "") -> str:
     """Native picker. A subprocess keeps tkinter off the server thread; the frozen
     exe has no python interpreter to spawn, so it falls back to an in-thread dialog."""
-    if getattr(sys, "frozen", False):
-        return _pick_in_thread(kind, initial)
     try:
         return _pick_via_subprocess(kind, initial)
     except (OSError, subprocess.SubprocessError):

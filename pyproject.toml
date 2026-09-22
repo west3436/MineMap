@@ -16,7 +16,6 @@ dependencies = [
     "nbtlib>=2.0",
     "pyshp>=2.3",
     "tifffile>=2024.1",
-    "imagecodecs>=2024.1",
     "fastapi>=0.110",
     "uvicorn>=0.29",
     "pydantic>=2.6",

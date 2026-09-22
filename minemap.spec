@@ -21,7 +21,6 @@ hiddenimports = [
     "uvicorn.lifespan.on",
     "uvicorn.lifespan.off",
     "tifffile",
-    "imagecodecs",
     "shapefile",
     "nbtlib",
     "tkinter",
@@ -29,14 +28,14 @@ hiddenimports = [
 ] + collect_submodules("minemap")
 
 a = Analysis(
-    ["minemap/__main__.py"],
+    ["launcher.py"],
     pathex=["."],
     binaries=[],
     datas=datas,
     hiddenimports=hiddenimports,
     hookspath=[],
     runtime_hooks=[],
-    excludes=["matplotlib", "scipy", "pandas", "IPython", "notebook"],
+    excludes=["matplotlib", "scipy", "pandas", "IPython", "notebook", "imagecodecs"],
     cipher=block_cipher,
     noarchive=False,
 )
