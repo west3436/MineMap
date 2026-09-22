@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+.venv/
+
+# MineMap runtime data (never commit caches or generated worlds)
+workspace/
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
