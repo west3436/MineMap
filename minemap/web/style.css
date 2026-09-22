@@ -175,7 +175,7 @@ table.tbl .id { font-family: var(--mono); font-size: 11.5px; }
   background: var(--chip); border-radius: 999px; padding: 2px 4px 2px 8px;
   font-size: 12px; font-family: var(--mono); max-width: 100%;
 }
-.chip input[type=number] { width: 3.6em; padding: 1px 3px; font-size: 11px; }
+.chip input[type=number] { width: 4.6em; padding: 1px 3px; font-size: 11px; }
 .chip.stat { padding: 3px 10px; font-family: inherit; }
 .chip .ib.small { width: 20px; height: 20px; }
 .chip .mod { color: var(--accent2); }
@@ -245,3 +245,9 @@ pre.cmds {
   #sidePane { width: 480px; }
   .pname { width: 11em; }
 }
+
+.item.card { flex-direction: column; align-items: stretch; gap: 4px; }
+.item.card .row { margin: 0; }
+.item.card .row.top .id { font-family: var(--mono); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.item.card input[type=number] { width: 5em; }
+.item.card select { max-width: 9em; }

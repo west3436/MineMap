@@ -625,33 +625,34 @@ async function tabStructures(p) {
   p.append(top);
 
   const sec = section('Structures', 'list');
-  const tbl = h('table', { class: 'tbl' }, h('thead', {}, h('tr', {},
-    h('th', { title: 'Enabled' }, ''), h('th', {}, 'Structure'), h('th', { title: 'Where it may sit' }, 'Where'),
-    h('th', { title: 'Count for a 20k x 20k map, scaled by area and density' }, 'Count'), h('th', { title: 'Large: wider forceload box and flatter ground' }, 'Large'), h('th', {}, 'Biomes'), h('th', {}, ''))));
-  const tbody = h('tbody');
+  const list = h('div', { class: 'list' });
   const PLACEMENTS = ['auto', 'land', 'any_land', 'coast', 'ocean', 'ocean_deep'];
   const renderRows = () => {
-    tbody.innerHTML = '';
+    list.innerHTML = '';
     st.entries.forEach((e, i) => {
       const en = h('input', { type: 'checkbox', title: 'Place this structure' }); en.checked = e.enabled;
       en.addEventListener('change', () => { e.enabled = en.checked; scheduleSave(); });
       const sel = h('select', { title: 'Placement class. auto resolves from the structure biome tags.' });
       for (const o of PLACEMENTS) sel.append(h('option', { value: o, selected: e.placement === o }, o));
       sel.addEventListener('change', () => { e.placement = sel.value; scheduleSave(); });
-      const cnt = h('input', { type: 'number', min: 0, step: 1, value: e.count, title: 'Target count before area and density scaling' });
+      const cnt = h('input', { type: 'number', min: 0, step: 1, value: e.count, title: 'Count for a 20k x 20k map, scaled by area and density' });
       cnt.addEventListener('change', () => { e.count = +cnt.value; scheduleSave(); });
-      const lg = h('input', { type: 'checkbox', title: 'Large footprint' }); lg.checked = e.large;
+      const lg = h('input', { type: 'checkbox', title: 'Large: wider forceload box and flatter ground' }); lg.checked = e.large;
       lg.addEventListener('change', () => { e.large = lg.checked; scheduleSave(); });
       const chips = h('div', { class: 'chips' });
       e.biomes.forEach((bm, k) => chips.append(h('span', { class: 'chip', title: bm }, bm.replace('minecraft:', ''), ib('x', 'Remove', () => { e.biomes.splice(k, 1); renderRows(); scheduleSave(); }, 'small'))));
       const add = ib('plus', 'Restrict to a biome', () => openPicker(add, biomeItems(), (it) => { e.biomes.push(it.id); renderRows(); scheduleSave(); }), 'small');
       chips.append(add);
-      tbody.append(h('tr', { title: e.note || '' }, h('td', {}, en), h('td', { class: 'id' }, e.id), h('td', {}, sel), h('td', {}, cnt), h('td', {}, lg), h('td', {}, chips),
-        h('td', {}, ib('trash', 'Remove this structure', () => { st.entries.splice(i, 1); renderRows(); scheduleSave(); }, 'small danger'))));
+      const card = h('div', { class: 'item card', title: e.note || '' },
+        h('div', { class: 'row top' }, en, h('span', { class: 'id grow', title: e.id }, e.id),
+          h('label', { title: 'Count' }, h('span', { html: icon('hash') }), cnt),
+          h('label', { title: 'Large footprint' }, h('span', { html: icon('maximize') }), lg),
+          ib('trash', 'Remove this structure', () => { st.entries.splice(i, 1); renderRows(); scheduleSave(); }, 'small danger')),
+        h('div', { class: 'row' }, h('label', { title: 'Where it may sit' }, h('span', { html: icon('map-pin') }), sel), chips));
+      list.append(card);
     });
   };
   renderRows();
-  tbl.append(tbody);
   const addBtn = ib('plus', 'Add a structure from the instance or the vanilla list', () => {
     const have = new Set(st.entries.map((e) => e.id));
     const items = S.structCatalog.filter((c) => !have.has(c.id)).map((c) => ({ id: c.id, mod: c.source !== 'vanilla', title: `${c.source} ${c.step || ''} suggested: ${c.placement}`, _c: c }));
@@ -662,7 +663,7 @@ async function tabStructures(p) {
     });
   });
   sec.querySelector('.head').append(addBtn);
-  sec.append(tbl);
+  sec.append(list);
   p.append(sec);
 }
 
